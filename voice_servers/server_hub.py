@@ -31,12 +31,12 @@ def getModels(request):
     melotts = melotts["models"]
 
     # get models from cottontail
-    cottontail = requests.get("http://0.0.0.0:8081/v1/models")
+    cottontail = requests.get("http://0.0.0.0:8085/v1/models")
     cottontail = cottontail.json()
     cottontail = cottontail["models"]
 
     # get models from cottontail-lg
-    cottontail2 = requests.get("http://0.0.0.0:8082/v1/models")
+    cottontail2 = requests.get("http://0.0.0.0:8090/v1/models")
     cottontail2 = cottontail2.json()
     cottontail2 = cottontail2["models"]
 
@@ -75,7 +75,7 @@ async def handleGet(request):
         return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
     elif voice and voice[0] == "cottontail-lg":
         import requests
-        response = requests.post("http://0.0.0.0:8082/v1/audio/speech", json=query, stream=True)
+        response = requests.post("http://0.0.0.0:8090/v1/audio/speech", json=query, stream=True)
     
         return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
     else:

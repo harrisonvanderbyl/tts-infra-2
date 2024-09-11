@@ -1005,8 +1005,8 @@ app.router.add_route("GET",'/v1/models', getModels)
 async def run():
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', 8082)
-    print("Server started at http://0.0.0.0:8082")
+    site = web.TCPSite(runner, '0.0.0.0', 8090)
+    print("Server started at http://0.0.0.0:8090")
 
     # run loop
     task = runloop()

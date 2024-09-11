@@ -15,4 +15,7 @@ cd ../..
 cd models/cottontail-sm && wget https://huggingface.co/Hazzzardous/cottontail/resolve/main/exp.pt
 cd ../..
 
-pip install -r ./requirements.txt && python3 ./server_hub.py
+pip install -r ./requirements.txt 
+pip install transformers -U
+python3 ./server_hub.py
+

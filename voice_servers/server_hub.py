@@ -91,7 +91,10 @@ async def handlePost(request):
     print(text, "text")
     voice = bodyjson.get("voice", None)
     query = {"prompt":base64.b64encode(text.encode("utf-8")).decode("utf-8"), "voice":voice, "temp": bodyjson.get("temp", 1.0)}
-    ns = web.Request.clone(request, query=query)
+    class reqcopy:
+        def __init__(self, query):
+            self.query = query
+    ns = reqcopy(query)
     return await handleGet(ns)
 
 async def handleSTPost(request):

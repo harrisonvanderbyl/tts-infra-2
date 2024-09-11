@@ -70,7 +70,7 @@ async def handleGet(request):
     
     elif voice and voice[0] == "cottontail":
         import requests
-        response = requests.post("http://0.0.0.0:8081/v1/audio/speech", json=query, stream=True)
+        response = requests.post("http://0.0.0.0:8085/v1/audio/speech", json=query, stream=True)
 
         return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
     elif voice and voice[0] == "cottontail-lg":

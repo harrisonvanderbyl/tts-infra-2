@@ -1,0 +1,8 @@
+aiohttp
+vocos
+transformers
+git+https://github.com/sustcsonglin/flash-linear-attention
+rotary_embedding_torch
+triton>=2.2
+datasets
+ffmpeg

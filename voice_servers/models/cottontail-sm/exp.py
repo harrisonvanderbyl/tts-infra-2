@@ -536,7 +536,7 @@ class DecodeJob():
         if(q_sampled.shape[0] <= self.t):
             self.buffer .append(((torch.stack([r.pop(0) for r in self.qs], dim=0).squeeze(-1)  - self.n_special_token_in).clamp_min(0)))
 
-            if(self.buffer.__len__() > 32):
+            if(self.buffer.__len__() > 16):
                 rvq = torch.stack(self.buffer,dim=1)
         
                 print(rvq.shape)
@@ -544,7 +544,7 @@ class DecodeJob():
                 # audio = Audio(wav, rate=24000)
                 print(wav.shape)
                 self.callback.write_audio_chunk(0, wav.t())
-                self.buffer = self.buffer[32:]
+                self.buffer = self.buffer[16:]
         # print(q_sampled.shape, self.stop_token.shape)
         if (q_sampled.squeeze() == self.stop_token.squeeze()).prod(dim=0):
             await self.finish()
@@ -575,7 +575,7 @@ class CacheObject():
         return self.state[key]
     
     
-jobbuffera = [*[(torch.zeros(16,8,128, 256, device="cuda", requires_grad=False),) for i in range(layers)],  (torch.zeros(16,8,128,256, device="cuda", requires_grad=False),)]
+jobbuffera = [*[(torch.zeros(16,8,128, 256, device="cuda", requires_grad=False),) for i in range(layers)],  (torch.zeros(16,8,32,64, device="cuda", requires_grad=False),)]
 
 
 globalstate = CacheObject(jobbuffera, store=True)
@@ -864,19 +864,25 @@ async def handleGet(request, query=None):
             #     # sleep for 1 second
             #     await asyncio.sleep(1)
 
-            res = web.StreamResponse(headers=headers)
+            res = web.StreamResponse(headers=headers, status=200)
             await res.prepare(request)
 
             frompos = 0
             while True:
+
                 if job.finished:
                     if jobs.__len__() == 0:
                         break
                     job = jobstart(jobs.pop(0))
-                await asyncio.sleep(0.001)
                 buffer = basicstreambuffer.getvalue()
-                await res.write(buffer[frompos:])
-                frompos = basicstreambuffer.tell()
+                print(buffer.__len__(), frompos)
+                try:
+                    await res.write(buffer[frompos:])
+                    frompos = basicstreambuffer.tell()
+                except:
+                    print("Error")
+
+                await asyncio.sleep(0.001)
 
 
             

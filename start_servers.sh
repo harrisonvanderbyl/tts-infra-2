@@ -1,4 +1,4 @@
-apt update && apt install tmux -y
+apt update && apt install tmux -y && apt install ffmpeg -y
 
 git clone https://github.com/myshell-ai/MeloTTS.git
 cd MeloTTS

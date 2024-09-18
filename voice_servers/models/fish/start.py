@@ -118,20 +118,11 @@ async def handleGet(request, query=None):
             'Content-Type': 'audio/x-wav',
         }
 
-        # load voice file
-        voicefile = "voices/npy/" + voice + ".wav.npy"
-        voicetext = "voices/npy/" + voice + ".txt"
-        with open(voicetext, "r") as f:
-            voicetext = f.read()
-            f.close()
-        with open(voicefile, "rb") as f:
-            voice = torch.load(f)
-            f.close()
 
 
  # load voice file
-        voicefile = "voices/npy/" + voice + ".wav.npy"
-        voicetext = "voices/npy/" + voice + ".wav.txt"
+        voicefile = "./voices/npy/" + voice + ".wav.npy"
+        voicetext = "./voices/npy/" + voice + ".wav.txt"
         with open(voicetext, "r") as f:
             voicetext = f.read()
             f.close()

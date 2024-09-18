@@ -1,17 +1,17 @@
 from typing import List
 from omegaconf import DictConfig
-from pytorch_lightning import Callback
-from pytorch_lightning.loggers import Logger
+# from pytorch_lightning import Callback
+# from pytorch_lightning.loggers import Logger
 
 from .logger import RankedLogger
 
 log = RankedLogger(__name__, rank_zero_only=True)
 
 
-def instantiate_callbacks(callbacks_cfg: DictConfig) -> List[Callback]:
+def instantiate_callbacks(callbacks_cfg: DictConfig) -> List:
     """Instantiates callbacks from config."""
 
-    callbacks: List[Callback] = []
+    callbacks: List = []
 
     if not callbacks_cfg:
         log.warning("No callback configs found! Skipping..")
@@ -28,10 +28,10 @@ def instantiate_callbacks(callbacks_cfg: DictConfig) -> List[Callback]:
     return callbacks
 
 
-def instantiate_loggers(logger_cfg: DictConfig) -> List[Logger]:
+def instantiate_loggers(logger_cfg: DictConfig) -> List:
     """Instantiates loggers from config."""
 
-    logger: List[Logger] = []
+    logger: List = []
 
     if not logger_cfg:
         log.warning("No logger configs found! Skipping...")

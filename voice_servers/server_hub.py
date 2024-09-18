@@ -16,10 +16,11 @@ import sys
 os.system("tmux new-session -d -s melotts 'cd models/melotts && python start.py'") # 8080
 
 # start the server
-os.system("tmux new-session -d -s ct1 'cd models/cottontail-lg && python expxl.py'") # 8081
+# os.system("tmux new-session -d -s ct1 'cd models/cottontail-lg && python expxl.py'") # 8081
 
 
-os.system("tmux new-session -d -s ct2 'cd models/cottontail-sm && python exp.py'") # 8081
+# os.system("tmux new-session -d -s ct2 'cd models/cottontail-sm && python exp.py'") # 8081
+os.system("tmux new-session -d -s fish 'cd models/fish && python start.py'") # 8080
 
 
 def getModels(request):
@@ -30,15 +31,20 @@ def getModels(request):
     melotts = melotts.json()
     melotts = melotts["models"]
 
-    # get models from cottontail
-    cottontail = requests.get("http://0.0.0.0:8085/v1/models")
-    cottontail = cottontail.json()
-    cottontail = cottontail["models"]
+    # # get models from cottontail
+    # cottontail = requests.get("http://0.0.0.0:8085/v1/models")
+    # cottontail = cottontail.json()
+    # cottontail = cottontail["models"]
 
-    # get models from cottontail-lg
-    cottontail2 = requests.get("http://0.0.0.0:8090/v1/models")
-    cottontail2 = cottontail2.json()
-    cottontail2 = cottontail2["models"]
+    # # get models from cottontail-lg
+    # cottontail2 = requests.get("http://0.0.0.0:8090/v1/models")
+    # cottontail2 = cottontail2.json()
+    # cottontail2 = cottontail2["models"]
+
+    # # get models from fish
+    fish = requests.get("http://0.0.0.0:8095/v1/models")
+    fish = fish.json()
+    fish = fish["models"]
 
 
     return web.Response(text=json.dumps(
@@ -46,8 +52,9 @@ def getModels(request):
             "models": ["mixed"],
             "voices": [
                 *["melotts/" + x for x in melotts],
-                *["cottontail/" + x for x in cottontail],
-                *["cottontail-lg/" + x for x in cottontail2]
+                # *["cottontail/" + x for x in cottontail],
+                # *["cottontail-lg/" + x for x in cottontail2],
+                *["fish/" + x for x in fish]
             ]
         }
     ))
@@ -78,8 +85,13 @@ async def handleGet(request):
         response = requests.post("http://0.0.0.0:8090/v1/audio/speech", json=query, stream=True)
     
         return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
+    elif voice and voice[0] == "fish":
+        import requests
+        response = requests.post("http://0.0.0.0:8095/v1/audio/speech", json=query, stream=True)
+
+        return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
     else:
-        return web.Response(text="Error: Voice not found")
+        return web.Response(text="OK")
 
         
 
@@ -117,6 +129,6 @@ app.router.add_route("POST",'/v1/audio/speech/sillytavern', handleSTPost)
 
 
 runner = web.AppRunner(app)
-asyncio.ensure_future(runner.setup()).add_done_callback(lambda _: asyncio.ensure_future(web.TCPSite(runner, '0.0.0.0', 80).start()))
+asyncio.ensure_future(runner.setup()).add_done_callback(lambda _: asyncio.ensure_future(web.TCPSite(runner, '0.0.0.0', 8070).start()))
 
 asyncio.get_event_loop().run_forever()

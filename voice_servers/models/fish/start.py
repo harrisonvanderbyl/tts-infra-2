@@ -132,7 +132,7 @@ async def handleGet(request, query=None):
 
         outputqueue = queue.Queue()
 
-        txt = "Im a little teapot short and stout"
+        txt = txt
 
         processqueue.put(GenerateRequest(request={"text":txt, "device":"cuda", "prompt_text": voicetext, "prompt_tokens": torch.LongTensor(voice).cuda(), "max_new_tokens": 1024}, response_queue=outputqueue))
 

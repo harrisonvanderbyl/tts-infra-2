@@ -35,3 +35,6 @@ langid==1.1.6
 tqdm
 tensorboard==2.16.2
 loguru==0.7.2
+omegaconf==2.3.0
+loralib
+vector_quantize_pytorch

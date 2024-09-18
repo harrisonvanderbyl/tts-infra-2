@@ -129,6 +129,6 @@ app.router.add_route("POST",'/v1/audio/speech/sillytavern', handleSTPost)
 
 
 runner = web.AppRunner(app)
-asyncio.ensure_future(runner.setup()).add_done_callback(lambda _: asyncio.ensure_future(web.TCPSite(runner, '0.0.0.0', 8070).start()))
+asyncio.ensure_future(runner.setup()).add_done_callback(lambda _: asyncio.ensure_future(web.TCPSite(runner, '0.0.0.0', 80).start()))
 
 asyncio.get_event_loop().run_forever()

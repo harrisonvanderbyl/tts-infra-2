@@ -8,7 +8,7 @@ import torch
 from tools.llama.generate import launch_thread_safe_queue
 from tools.llama.generate import GenerateRequest
 
-speed = 1.0
+speed = 1.1
 
 
 
@@ -163,6 +163,8 @@ async def handleGet(request, query=None):
         path = "temp.wav"
         fake_audio = np.concatenate(fake_audio)
         with open(path, "wb") as f:
+            # boost volume by 50%
+            fake_audio = fake_audio * 1.5
             sf.write(f, fake_audio, model.spec_transform.sample_rate)
             f.close()
             f = open(path, "rb")

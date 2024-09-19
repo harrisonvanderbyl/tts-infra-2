@@ -91,7 +91,8 @@ import os
 # go into ./voices/*.wav and compile the voices
 
 files = os.listdir("voices/wav/")
-files = [f for f in files if f.endswith(".wav")]
+allready = os.listdir("voices/npy/")
+files = [f for f in files if f.endswith(".wav") and f+".npy" not in allready]
 
 for f in files:
 

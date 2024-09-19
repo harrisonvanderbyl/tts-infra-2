@@ -130,36 +130,38 @@ async def handleGet(request, query=None):
             voice = np.load(f)
             f.close()
 
-        outputqueue = queue.Queue()
 
-        txt = txt
+        txts = txt.split(". ")
+        fake_audio = []
+        for txt in txts:
+        
+            outputqueue = queue.Queue()
+            processqueue.put(GenerateRequest(request={"text":txt, "device":"cuda", "prompt_text": voicetext, "prompt_tokens": torch.LongTensor(voice).cuda(), "max_new_tokens": 1024}, response_queue=outputqueue))
 
-        processqueue.put(GenerateRequest(request={"text":txt, "device":"cuda", "prompt_text": voicetext, "prompt_tokens": torch.LongTensor(voice).cuda(), "max_new_tokens": 1024}, response_queue=outputqueue))
-
-        output = outputqueue.get()
-
-
-
-        print(output)
-
-        voicedata = output.response.codes
-
-        feature_lengths = torch.tensor([voicedata.shape[1]], device="cuda")
-        fake_audios, _ = model.decode(
-            indices=voicedata[None], feature_lengths=feature_lengths
-        )
-        audio_time = fake_audios.shape[-1] / model.spec_transform.sample_rate
-        print(f"Audio time: {audio_time:.2f}s")
+            output = outputqueue.get()
 
 
-        # Save audio
-        fake_audio = fake_audios[0, 0].float().cpu().detach().numpy()
-        import soundfile as sf
-        # sf.write("o.wav", fake_audio, model.spec_transform.sample_rate)
 
-        # ccreate temp file
+            print(output)
+
+            voicedata = output.response.codes
+
+            feature_lengths = torch.tensor([voicedata.shape[1]], device="cuda")
+            fake_audios, _ = model.decode(
+                indices=voicedata[None], feature_lengths=feature_lengths
+            )
+            audio_time = fake_audios.shape[-1] / model.spec_transform.sample_rate
+            print(f"Audio time: {audio_time:.2f}s")
+
+
+            # Save audio
+            fake_audio += [fake_audios[0, 0].float().cpu().detach().numpy()]
+            import soundfile as sf
+            # sf.write("o.wav", fake_audio, model.spec_transform.sample_rate)
+
+            # ccreate temp file
         path = "temp.wav"
-
+        fake_audio = np.concatenate(fake_audio)
         with open(path, "wb") as f:
             sf.write(f, fake_audio, model.spec_transform.sample_rate)
             f.close()

@@ -81,7 +81,7 @@ import numpy as np
 
 model = load_model("fish-speech/configs/firefly_gan_vq.yaml", "checkpoints/fish-speech-1.4/firefly-gan-vq-fsq-8x1024-21hz-generator.pth", device="cuda")
 
-processqueue = launch_thread_safe_queue("checkpoints/fish-speech-1.4", torch.device("cuda"), torch.bfloat16)
+processqueue = launch_thread_safe_queue("checkpoints/fish-speech-1.4", torch.device("cuda"), torch.bfloat16, True)
 
 
 

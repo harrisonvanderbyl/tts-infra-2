@@ -195,9 +195,10 @@ async def getModels(request):
     import os
     import numpy as np
     files = os.listdir("voices/npy/")
+    npy_files = [file for file in files if file.endswith(".npy")]
     return web.Response(text=json.dumps(
         {
-            "models": list(map(lambda x: x[:-8], files))
+            "models": list(map(lambda x: x[:-8], npy_files))
         }
     ))
 

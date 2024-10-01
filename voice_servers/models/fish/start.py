@@ -214,6 +214,6 @@ app.router.add_route("POST",'/v1/audio/speech', handlePost)
 app.router.add_route("GET",'/v1/models', getModels)
 
 runner = web.AppRunner(app)
-asyncio.ensure_future(runner.setup()).add_done_callback(lambda _: asyncio.ensure_future(web.TCPSite(runner, '0.0.0.0', 8095).start()))
+asyncio.ensure_future(runner.setup()).add_done_callback(lambda _: asyncio.ensure_future(web.TCPSite(runner, '0.0.0.0', 80).start()))
 
 asyncio.get_event_loop().run_forever()

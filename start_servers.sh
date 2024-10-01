@@ -6,4 +6,4 @@ pip install -r ./requirements.txt
 pip install transformers -U
 huggingface-cli download fishaudio/fish-speech-1.4 --local-dir voice_servers/models/fish/checkpoints/fish-speech-1.4/
 cd voice_servers/models/fish/
-python3 ./server_hub.py
+tmux new-session -d -s fish 'python3 ./start.py'

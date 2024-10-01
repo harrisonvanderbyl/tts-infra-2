@@ -27,9 +27,9 @@ def getModels(request):
 
     import requests
     # get models from melotts
-    melotts = requests.get("http://0.0.0.0:8080/v1/models")
-    melotts = melotts.json()
-    melotts = melotts["models"]
+    # melotts = requests.get("http://0.0.0.0:8080/v1/models")
+    # melotts = melotts.json()
+    # melotts = melotts["models"]
 
     # # get models from cottontail
     # cottontail = requests.get("http://0.0.0.0:8085/v1/models")
@@ -63,35 +63,35 @@ async def handleGet(request):
     query = request.query
     query = dict(query)
     voice = query.get("voice", None)
-    if voice:
-        voice = voice.split("/")
+    # if voice:
+    #     voice = voice.split("/")
 
-    query["voice"] = voice[1] if voice else None
+    query["voice"] = voice if voice else None
     query["input"] = base64.b64decode(query["prompt"]).decode("utf-8")
 
-    if voice and voice[0] == "melotts":
-        import requests
-        response = requests.post("http://0.0.0.0:8080/v1/audio/speech", json=query, stream=True)
+    # if voice and voice[0] == "melotts":
+    #     import requests
+    #     response = requests.post("http://0.0.0.0:8080/v1/audio/speech", json=query, stream=True)
         
-        return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"})
+    #     return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"})
     
-    elif voice and voice[0] == "cottontail":
-        import requests
-        response = requests.post("http://0.0.0.0:8085/v1/audio/speech", json=query, stream=True)
+    # elif voice and voice[0] == "cottontail":
+    #     import requests
+    #     response = requests.post("http://0.0.0.0:8085/v1/audio/speech", json=query, stream=True)
 
-        return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
-    elif voice and voice[0] == "cottontail-lg":
-        import requests
-        response = requests.post("http://0.0.0.0:8090/v1/audio/speech", json=query, stream=True)
+    #     return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
+    # elif voice and voice[0] == "cottontail-lg":
+    #     import requests
+    #     response = requests.post("http://0.0.0.0:8090/v1/audio/speech", json=query, stream=True)
     
-        return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
-    elif voice and voice[0] == "fish":
-        import requests
-        response = requests.post("http://0.0.0.0:8095/v1/audio/speech", json=query, stream=True)
+    #     return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
+    # elif voice and voice[0] == "fish":
+    import requests
+    response = requests.post("http://0.0.0.0:8095/v1/audio/speech", json=query, stream=True)
 
-        return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
-    else:
-        return web.Response(text="OK")
+    return web.Response(body=response.content, headers={"Content-Type": "audio/mpeg"}, status=response.status_code)
+    # else:
+    #     return web.Response(text="OK")
 
         
 

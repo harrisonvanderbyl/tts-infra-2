@@ -81,11 +81,12 @@ import numpy as np
 
 model = load_model("fish-speech/configs/firefly_gan_vq.yaml", "checkpoints/fish-speech-1.4/firefly-gan-vq-fsq-8x1024-21hz-generator.pth", device="cuda")
 
-processqueue = launch_thread_safe_queue("checkpoints/fish-speech-1.4", torch.device("cuda"), torch.bfloat16, True)
+processqueue = launch_thread_safe_queue("checkpoints/fish-speech-1.4", torch.device("cuda"), torch.bfloat16)
 
 
 
-
+import huggingface_hub
+huggingface_hub = huggingface_hub.HfApi()
 # text: str,
 # num_samples: int = 1,
 # max_new_tokens: int = 0,
@@ -119,16 +120,20 @@ async def handleGet(request, query=None):
         }
 
 
+        path = huggingface_hub.hf_hub_download(voice, "voice.npz")
 
- # load voice file
-        voicefile = "./voices/npy/" + voice + ".wav.npy"
-        voicetext = "./voices/npy/" + voice + ".wav.txt"
-        with open(voicetext, "r") as f:
-            voicetext = f.read()
-            f.close()
-        with open(voicefile, "rb") as f:
-            voice = np.load(f)
-            f.close()
+
+#  # load voice file
+#         voicefile = "./voices/npy/" + voice + ".wav.npy"
+#         voicetext = "./voices/npy/" + voice + ".wav.txt"
+#         with open(voicetext, "r") as f:
+#             voicetext = f.read()
+#             f.close()
+#         with open(voicefile, "rb") as f:
+#             voice = np.load(f)
+#             f.close()
+        voice = torch.load(path)
+        voice, voicetext = voice["indices"], voice["txt"]
 
 
         txts = txt.split(". ")
